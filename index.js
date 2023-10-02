@@ -252,14 +252,24 @@ function setup() {
       for (const lyric of lyrics) {
         const el = document.createElement('li'),
               text = lyric.text || (lyric === lyrics[lyrics.length - 1] ? '(end)' : '...')
-        
+
         if (text === '')
           el.classList.add('other')
 
         el.setAttribute('data-time', lyric.time.total)
         el.setAttribute('data-text', lyric.text)
 
-        el.innerText = text
+        const a = document.createElement('a');
+        a.href = '#';
+        a.innerText = text
+        a.style.textDecoration = 'none';
+        a.style.color = 'inherit';
+        el.appendChild(a);
+
+        a. addEventListener('click', function(event) {
+          event.preventDefault();
+          moveLyric(lyric.time.total);
+        });
 
         lyric.element = el
         lyricsEl.appendChild(el)
@@ -270,6 +280,11 @@ function setup() {
     } catch (err) {
       setError(err)
     }
+  }
+
+  function moveLyric(time) {
+    const video = document.querySelector('video');
+    video.currentTime = time
   }
 
   function onTimeChanged(time) {
