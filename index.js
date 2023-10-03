@@ -283,8 +283,13 @@ function setup() {
   }
 
   function moveLyric(time) {
-    const video = document.querySelector('video');
-    video.currentTime = time
+    const myDiv = document.getElementById('movie_player');
+    const functionName = 'seekTo';
+    if (myDiv && myDiv[functionName] && typeof myDiv[functionName] === 'function') {
+      myDiv[functionName](time); // 함수 호출
+    } else {
+      console.error('Function not found or not a valid function');
+    }
     onTimeChanged(time)
   }
 
@@ -332,10 +337,17 @@ function setup() {
         trackArtistsEls.push(alt)
     }
 
+    const myDiv = document.getElementById('movie_player');
+    const functionName = 'getCurrentTime';
+    let time
+    if (myDiv && myDiv[functionName] && typeof myDiv[functionName] === 'function') {
+      time = myDiv[functionName](); // 함수 호출
+    } else {
+      console.error('Function not found or not a valid function');
+    }
     const video = document.querySelector('video');
     const song = trackNameEl.textContent,
-          artists = trackArtistsEls.map(x => x.textContent).filter(x => x.length > 0),
-          time = video.currentTime
+          artists = trackArtistsEls.map(x => x.textContent).filter(x => x.length > 0);
 
     if (song !== currentSong || artists.length !== currentArtists.length || artists.some((a, i) => currentArtists[i] !== a)) {
       if (song.length === 0 || artists.length === 0) {
